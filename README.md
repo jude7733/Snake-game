@@ -1,5 +1,5 @@
 This is a simple classic Snake-game
 
-install pygame using pip
+install pygame, pygame-menu using pip
 
-main menu is pending
+main menu highscore and difficulty options are pending

@@ -240,20 +240,23 @@ def playgame():
         pygame.display.update()
         clock.tick(60)
 
+#main menu pygame window
 def main_menu():
     pygame.init()
-    surface = pygame.display.set_mode((600, 400))
-    menu = pygame_menu.Menu('Welcome', 400, 300,theme=pygame_menu.themes.THEME_BLUE)
+    surface = pygame.display.set_mode((800, 600))
+    menu = pygame_menu.Menu('Welcome', 800, 600,theme=pygame_menu.themes.THEME_SOLARIZED)
     def set_difficulty(value, difficulty):
         pass
 
     def start_the_game():
         playgame()
 
+    def score():
         pass
     menu.add.text_input('Name :', default='Jerry')
     menu.add.selector('Difficulty :', [('Hard', 1), ('Easy', 2)], onchange=set_difficulty)
     menu.add.button('Play', start_the_game)
+    menu.add.button('High-scores', score)
     menu.add.button('Quit', pygame_menu.events.EXIT)
     menu.mainloop(surface)
 main_menu()
