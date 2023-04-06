@@ -1,7 +1,9 @@
 import pygame,sys,random
 from pygame.math import Vector2
 import pygame_menu
+import pygame_menu.widgets as _widgets
 
+score_text = 0
 
 def playgame():
     class FRUIT:
@@ -182,8 +184,10 @@ def playgame():
                             pygame.draw.rect(screen,grass_color,grass_rect)
 
         def draw_score(self):
-            score_text = str(len(self.snake.body) - 3)
-            score_surface = game_font.render(score_text,True,(56,74,12))
+            global score_text
+            score_text = int(len(self.snake.body) - 3)
+            static = str(len(self.snake.body) - 3)
+            score_surface = game_font.render(static,True,(56,74,12))
             score_x = int(cell_size * cell_number - 60)
             score_y = int(cell_size * cell_number - 40)
             score_rect =score_surface.get_rect(center = (score_x,score_y))
@@ -240,20 +244,63 @@ def playgame():
         pygame.display.update()
         clock.tick(60)
 
-#main menu pygame window
+# main menu pygame window
 def main_menu():
+    
+    topPlayer = 'player'
+    global state
+    state = 0
+    
+    
+
     pygame.init()
     surface = pygame.display.set_mode((800, 600))
-    menu = pygame_menu.Menu('Welcome', 800, 600,theme=pygame_menu.themes.THEME_SOLARIZED)
+    menu = pygame_menu.Menu('Snake Game', 800, 600,theme=pygame_menu.themes.THEME_SOLARIZED)
+    
+    def gamestate(state):
+        if state == 0:
+            print('gamestate is 0')
+
+
     def set_difficulty(value, difficulty):
         pass
 
     def start_the_game():
         playgame()
+        
+
+    def MyTextValue(name):
+    #on input change your value is returned here
+        global topPlayer
+        topPlayer = name
+    
+    def check_score(score_text):
+        
+        global topScore,secondScore
+        topScore = 0
+        secondScore = 0
+        if score_text > topScore:
+            topScore = score_text
+            return
+        elif score_text > secondScore:
+            secondScore = score_text
+            
 
     def score():
-        pass
-    menu.add.text_input('Name :', default='Jerry')
+        highscoremenu = pygame_menu.Menu('High Scores', 800, 600,theme=pygame_menu.themes.THEME_SOLARIZED)
+        highscoremenu.add.button('Back', main_menu)
+        #highscoremenu.add.label('High Scores')
+        table = highscoremenu.add.table(table_id='Top Scores', font_size=20)
+        table.default_cell_padding = 5
+        table.default_row_background_color = 'white'
+        table.add_row(['Name', 'score'],cell_font=pygame_menu.font.FONT_OPEN_SANS_BOLD)
+        check_score(score_text)
+        table.add_row([topPlayer, topScore], cell_align=pygame_menu.locals.ALIGN_CENTER)
+        table.add_row([topPlayer, secondScore], cell_align=pygame_menu.locals.ALIGN_CENTER)
+        highscoremenu.mainloop(surface)
+    
+    gamestate(state)
+    menu.add.text_input('Name :', default='Jerry',onchange=MyTextValue)
     menu.add.selector('Difficulty :', [('Hard', 1), ('Easy', 2)], onchange=set_difficulty)
     menu.add.button('Play', start_the_game)
     menu.add.button('High-scores', score)
